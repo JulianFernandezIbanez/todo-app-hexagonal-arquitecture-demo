@@ -1,5 +1,10 @@
 package com.example.infrastructure.adapter.out.persistence;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Repository;
 
 import com.example.application.port.out.TaskRepositoryPort;
@@ -23,6 +28,23 @@ public class JpaTaskRepositoryAdapter implements TaskRepositoryPort {
         
         return mapper.toDomain(saved);
     
+    }
+
+    @Override
+    public Optional<Task> findById(Long id) {
+
+        return dataTaskRepository.findById(id).map(mapper::toDomain);
+   
+    }
+
+    @Override
+    public List<Task> listAll() {
+
+        return dataTaskRepository.findAll()
+            .stream()
+            .map(mapper::toDomain)
+            .collect(Collectors.toList());
+
     }
 
 }
