@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import com.example.domain.model.Task;
 import com.example.infrastructure.adapter.in.rest.dto.TaskResponse;
 
-@Mapper(componentModel = "springo")
+@Mapper(componentModel = "spring")
 public interface TaskMapper {
 
     @Mapping(source = "task.id", target = "id")
