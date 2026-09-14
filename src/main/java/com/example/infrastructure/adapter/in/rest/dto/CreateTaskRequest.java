@@ -10,6 +10,8 @@ public class CreateTaskRequest {
 
     @NotBlank(message = "The title is mandatory")
     private String title;
+    
+    @NotBlank(message = "The description is mandatory")
     private String description;
 
 }
