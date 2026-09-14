@@ -46,4 +46,10 @@ public class JpaTaskRepositoryAdapter implements TaskRepositoryPort {
 
     }
 
+    @Override
+    public void delete(Long id) {
+        
+        dataTaskRepository.deleteById(id);
+
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.application.port.in.CreateTaskUseCase;
+import com.example.application.port.in.DeleteTaskUseCase;
 import com.example.application.port.in.GetTaskUseCase;
 import com.example.application.port.in.ListTaskUseCase;
 import com.example.domain.model.Task;
@@ -19,8 +20,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -33,6 +37,7 @@ public class TaskController {
     private final CreateTaskUseCase createTaskUseCase;
     private final GetTaskUseCase getTaskUseCase;
     private final ListTaskUseCase listTaskUseCase;
+    private final DeleteTaskUseCase deleteTaskUseCase;
 
     @PostMapping
     public ResponseEntity<TaskResponse> create(
@@ -70,7 +75,31 @@ public class TaskController {
 
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteTask(@PathVariable Long id){
+
+        deleteTaskUseCase.delete(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
     
-    
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> putMethodName(
+        @Valid
+        @PathVariable Long id, 
+        @RequestBody CreateTaskRequest request) {
+
+            Task task = getTaskUseCase.getById(id);
+
+            task.setTitle(request.getTitle());
+            task.setDescription(request.getDescription());
+
+            createTaskUseCase.create(task);
+
+            return ResponseEntity.ok(task);
+
+    }
 
 }

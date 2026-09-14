@@ -10,5 +10,6 @@ public interface TaskRepositoryPort {
     Task save(Task task);
     Optional<Task> findById(Long id);
     List<Task> listAll();
+    void delete(Long id);
 
 }
