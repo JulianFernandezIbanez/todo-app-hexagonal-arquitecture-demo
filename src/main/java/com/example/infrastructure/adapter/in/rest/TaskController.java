@@ -46,7 +46,8 @@ public class TaskController {
             
             Task saved = createTaskUseCase.create(task);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(TaskResponse.from(saved));
+             return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(TaskResponse.from(saved));
 
     }
 
