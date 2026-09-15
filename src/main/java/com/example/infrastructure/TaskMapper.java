@@ -1,4 +1,4 @@
-package com.example.application.service;
+package com.example.infrastructure;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
