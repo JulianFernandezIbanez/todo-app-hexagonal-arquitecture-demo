@@ -11,10 +11,10 @@ public interface TaskMapper {
 
     @Mapping(source = "task.id", target = "id")
     @Mapping(source = "task.title", target = "title")
-    @Mapping(source = "task.description", target = "desc")
+    @Mapping(source = "task.description", target = "description")
     @Mapping(source = "task.status", target = "status")
-    @Mapping(source = "task.createdAt", target = "created")
-    @Mapping(source = "task.completedAt", target = "completed")
+    @Mapping(source = "task.createdAt", target = "createdAt")
+    @Mapping(source = "task.completedAt", target = "completedAt")
     TaskResponse mapTaskTotaskResponse(Task task);
 
 }

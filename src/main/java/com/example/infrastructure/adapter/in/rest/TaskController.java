@@ -12,9 +12,12 @@ import com.example.application.port.in.CreateTaskUseCase;
 import com.example.application.port.in.DeleteTaskUseCase;
 import com.example.application.port.in.GetTaskUseCase;
 import com.example.application.port.in.ListTaskUseCase;
+import com.example.application.port.in.UpdateTaskUseCase;
 import com.example.domain.model.Task;
 import com.example.infrastructure.adapter.in.rest.dto.CreateTaskRequest;
 import com.example.infrastructure.adapter.in.rest.dto.TaskResponse;
+import com.example.infrastructure.adapter.in.rest.dto.UpdateTaskRequest;
+import com.example.infrastructure.adapter.out.persistence.TaskPersistenceMapper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,8 @@ public class TaskController {
     private final GetTaskUseCase getTaskUseCase;
     private final ListTaskUseCase listTaskUseCase;
     private final DeleteTaskUseCase deleteTaskUseCase;
+    private final UpdateTaskUseCase updateTaskUseCase;
+    private final TaskPersistenceMapper mapper;
 
     @PostMapping
     public ResponseEntity<TaskResponse> create(
@@ -52,7 +57,7 @@ public class TaskController {
             Task saved = createTaskUseCase.create(task);
 
              return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(TaskResponse.from(saved));
+                    .body(mapper.toResponse(saved));
 
     }
 
@@ -61,7 +66,7 @@ public class TaskController {
         
         Task task = getTaskUseCase.getById(id);
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(TaskResponse.from(task));
+        return ResponseEntity.status(HttpStatus.FOUND).body(mapper.toResponse(task));
 
     }
 
@@ -70,7 +75,7 @@ public class TaskController {
 
         List<TaskResponse> response = listTaskUseCase.listAll()
             .stream()
-            .map(TaskResponse::from)
+            .map(mapper::toResponse)
             .collect(Collectors.toList());
 
         return ResponseEntity.ok(response);
@@ -86,19 +91,16 @@ public class TaskController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Task> putMethodName(
+    public ResponseEntity<TaskResponse> updateTask(
         @Valid
         @PathVariable Long id, 
-        @RequestBody CreateTaskRequest request) {
+        @RequestBody UpdateTaskRequest request) {
 
-            Task task = getTaskUseCase.getById(id);
+        Task task = mapper.toDomain(request);
 
-            task.setTitle(request.getTitle());
-            task.setDescription(request.getDescription());
+        Task updated = updateTaskUseCase.update(id, task);
 
-            createTaskUseCase.create(task);
-
-            return ResponseEntity.ok(task);
+        return ResponseEntity.ok(mapper.toResponse(updated));
 
     }
 

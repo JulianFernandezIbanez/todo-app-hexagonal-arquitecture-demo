@@ -25,6 +25,7 @@ public class Task {
     private TaskStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime completedAt;
+    private String image;
 
     /*
         Los siguientes metodos aportan comportamientos,
@@ -64,6 +65,23 @@ public class Task {
             this.createdAt = LocalDateTime.now();
         }
 
+    }
+
+        public void update(String title, String description) {
+
+        this.title = title;
+        this.description = description;
+    }
+
+    public void changeStatusTo(TaskStatus newStatus) {
+
+        if (newStatus == null || newStatus == this.status)
+            return ;
+
+        if (newStatus == TaskStatus.COMPLETED)
+            complete();
+        else
+            reOpen();
     }
 
 }

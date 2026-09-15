@@ -49,9 +49,15 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
     }
 
     @Override
-    public Task update(Task task) {
+    public Task update(Long id, Task task) {
+        
+        Task foundedTask = taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
-        return taskRepositoryPort.save(task);
+        foundedTask.update(task.getTitle(), task.getDescription());
+
+        foundedTask.changeStatusTo(task.getStatus());
+
+        return taskRepositoryPort.save(foundedTask);
 
     }
 

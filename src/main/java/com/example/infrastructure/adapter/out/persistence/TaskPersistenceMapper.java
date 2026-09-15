@@ -1,43 +1,19 @@
 package com.example.infrastructure.adapter.out.persistence;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
 import com.example.domain.model.Task;
+import com.example.infrastructure.adapter.in.rest.dto.TaskResponse;
+import com.example.infrastructure.adapter.in.rest.dto.UpdateTaskRequest;
 
-@Component 
-public class TaskPersistenceMapper {
+@Mapper(componentModel = "spring")
+public interface TaskPersistenceMapper {
 
-    public Task toDomain(TaskJpaEntity entity){
+    Task toDomain(TaskJpaEntity taskJpaEntity);
 
-        if (entity == null) {
-            return null;
-        }
+    Task toDomain(UpdateTaskRequest updateTaskRequest);
 
-        return Task.builder()
-                    .id(entity.getId())
-                    .title(entity.getTitle())
-                    .description(entity.getDescription())
-                    .status(entity.getStatus())
-                    .createdAt(entity.getCreatedAt())
-                    .completedAt(entity.getCompletedAt())
-                .build();
-    }
+    TaskJpaEntity toJpaEntity(Task task);
 
-    public TaskJpaEntity toJpaEntity(Task task) {
-
-        if (task == null) {
-            return null;
-        }
-
-        return TaskJpaEntity.builder()
-                    .id(task.getId())
-                    .title(task.getTitle())
-                    .description(task.getDescription())
-                    .status(task.getStatus())
-                    .createdAt(task.getCreatedAt())
-                    .completedAt(task.getCompletedAt())
-                .build();
-
-    }
-
+    TaskResponse toResponse(Task task);
 }

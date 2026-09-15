@@ -4,6 +4,6 @@ import com.example.domain.model.Task;
 
 public interface UpdateTaskUseCase {
 
-    Task update(Task task);
+    Task update(Long id, Task task);
 
 }

@@ -21,7 +21,7 @@ public class JpaTaskRepositoryAdapter implements TaskRepositoryPort {
     @Override
     public Task save(Task task) {
 
-        task.initDefaults();
+        //task.initDefaults();
         TaskJpaEntity entity = mapper.toJpaEntity(task);
         TaskJpaEntity saved = dataTaskRepository.save(entity);
         
