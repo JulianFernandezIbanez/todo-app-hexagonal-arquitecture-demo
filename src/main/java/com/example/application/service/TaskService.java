@@ -11,6 +11,8 @@ import com.example.application.port.in.DeleteTaskUseCase;
 import com.example.application.port.in.GetTaskUseCase;
 import com.example.application.port.in.ListTaskUseCase;
 import com.example.application.port.in.UpdateTaskUseCase;
+import com.example.application.port.in.UploadImageTaskUse;
+import com.example.application.port.out.FileStoragePort;
 import com.example.application.port.out.TaskRepositoryPort;
 import com.example.domain.exception.TaskNotFoundException;
 import com.example.domain.model.Task;
@@ -19,9 +21,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service 
-public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskUseCase, DeleteTaskUseCase, UpdateTaskUseCase {
+public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskUseCase, DeleteTaskUseCase, UpdateTaskUseCase, UploadImageTaskUse {
 
     private final TaskRepositoryPort taskRepositoryPort;
+    private final FileStoragePort fileStoragePort;
 
     @Override
     public Task create(Task task) {
@@ -44,7 +47,10 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
     @Override
     public void delete(long id) {
         
+        Task task = taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
         taskRepositoryPort.delete(id);
+        fileStoragePort.delete(task.getImage());
 
     }
 
@@ -58,6 +64,25 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
         foundedTask.changeStatusTo(task.getStatus());
 
         return taskRepositoryPort.save(foundedTask);
+
+    }
+
+    @Override
+    public Task uploadImage(long id, String fileName, byte[] content) {
+
+        Task task = taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
+        String previousImage = task.getImage();
+        
+        String imagePath = fileStoragePort.store(fileName, content);
+
+        task.attachImage(imagePath);
+
+        Task saved = taskRepositoryPort.save(task);
+
+        fileStoragePort.delete(previousImage);
+
+        return saved;
 
     }
 

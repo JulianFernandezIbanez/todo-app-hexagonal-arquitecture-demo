@@ -1,18 +1,22 @@
 package com.example.infrastructure.adapter.in.rest;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.application.port.in.CreateTaskUseCase;
 import com.example.application.port.in.DeleteTaskUseCase;
 import com.example.application.port.in.GetTaskUseCase;
 import com.example.application.port.in.ListTaskUseCase;
 import com.example.application.port.in.UpdateTaskUseCase;
+import com.example.application.port.in.UploadImageTaskUse;
 import com.example.domain.model.Task;
 import com.example.infrastructure.adapter.in.rest.dto.CreateTaskRequest;
 import com.example.infrastructure.adapter.in.rest.dto.TaskResponse;
@@ -42,6 +46,7 @@ public class TaskController {
     private final ListTaskUseCase listTaskUseCase;
     private final DeleteTaskUseCase deleteTaskUseCase;
     private final UpdateTaskUseCase updateTaskUseCase;
+    private final UploadImageTaskUse uploadImageTaskUse;
     private final TaskPersistenceMapper mapper;
 
     @PostMapping
@@ -102,6 +107,14 @@ public class TaskController {
 
         return ResponseEntity.ok(mapper.toResponse(updated));
 
+    }
+
+    @PostMapping("/{id}/image")
+    public ResponseEntity<TaskResponse> uploadImage(@PathVariable long id, @RequestParam("image") MultipartFile image) throws IOException {
+
+        Task task = uploadImageTaskUse.uploadImage(id, image.getOriginalFilename(), image.getBytes());
+
+        return ResponseEntity.ok(mapper.toResponse(task));
     }
 
 }

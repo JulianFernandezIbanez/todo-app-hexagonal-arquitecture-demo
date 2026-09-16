@@ -84,4 +84,9 @@ public class Task {
             reOpen();
     }
 
+    public void attachImage(String imagePath) {
+
+        this.image = imagePath;
+    }
+
 }
