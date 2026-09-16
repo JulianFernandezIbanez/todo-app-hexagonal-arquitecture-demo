@@ -20,7 +20,6 @@ import com.example.domain.model.Task;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Service 
 public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskUseCase, DeleteTaskUseCase, UpdateTaskUseCase, UploadImageTaskUse {
 
     private final TaskRepositoryPort taskRepositoryPort;
@@ -49,6 +48,7 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
         
         Task task = taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
+        fileStoragePort.delete(task.getImage());
         taskRepositoryPort.delete(id);
         fileStoragePort.delete(task.getImage());
 
@@ -85,5 +85,17 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
         return saved;
 
     }
+
+    @Override
+    public Task SetImage(Task task, String fileName, byte[] content) {
+
+        String imagePath = fileStoragePort.store(fileName, content);
+
+        task.attachImage(imagePath);
+
+        return taskRepositoryPort.save(task);
+
+    }
+
 
 }

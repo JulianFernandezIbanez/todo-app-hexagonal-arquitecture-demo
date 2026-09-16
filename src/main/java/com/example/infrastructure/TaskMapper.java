@@ -15,6 +15,7 @@ public interface TaskMapper {
     @Mapping(source = "task.status", target = "status")
     @Mapping(source = "task.createdAt", target = "createdAt")
     @Mapping(source = "task.completedAt", target = "completedAt")
+    @Mapping(source = "task.image", target = "image")
     TaskResponse mapTaskTotaskResponse(Task task);
 
 }

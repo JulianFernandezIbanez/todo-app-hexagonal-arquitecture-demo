@@ -7,9 +7,11 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.example.application.port.out.FileStoragePort;
 
+@Component
 public class FileSystemStorageAdapter implements FileStoragePort {
 
     private final Path uploadsDir;

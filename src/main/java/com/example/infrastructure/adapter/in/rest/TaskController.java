@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,14 +53,20 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskResponse> create(
         @Valid 
-        @RequestBody CreateTaskRequest request) {
+        @RequestPart ("Task") CreateTaskRequest request, 
+        @RequestPart("Image") MultipartFile image) throws IOException {
 
             Task task = Task.builder()
                         .title(request.getTitle())
                         .description(request.getDescription())
                     .build();
+
+            Task saved = uploadImageTaskUse.SetImage(
+                task,
+                image.getOriginalFilename(),
+                image.getBytes());
             
-            Task saved = createTaskUseCase.create(task);
+            saved = createTaskUseCase.create(saved);
 
              return ResponseEntity.status(HttpStatus.CREATED)
                     .body(mapper.toResponse(saved));
