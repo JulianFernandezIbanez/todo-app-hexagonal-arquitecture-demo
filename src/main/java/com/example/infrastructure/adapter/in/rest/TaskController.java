@@ -24,6 +24,7 @@ import com.example.infrastructure.adapter.in.rest.dto.TaskResponse;
 import com.example.infrastructure.adapter.in.rest.dto.UpdateTaskRequest;
 import com.example.infrastructure.adapter.out.persistence.TaskPersistenceMapper;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,6 +95,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional 
     public ResponseEntity<HttpStatus> deleteTask(@PathVariable long id){
 
         deleteTaskUseCase.delete(id);
@@ -103,6 +105,7 @@ public class TaskController {
     }
     
     @PutMapping("/{id}")
+    @Transactional 
     public ResponseEntity<TaskResponse> updateTask(
         @Valid
         @PathVariable Long id, 
