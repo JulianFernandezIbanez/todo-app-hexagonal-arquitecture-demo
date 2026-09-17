@@ -4,7 +4,6 @@ package com.example.application.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
 
 import com.example.application.port.in.CreateTaskUseCase;
 import com.example.application.port.in.DeleteTaskUseCase;
