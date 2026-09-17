@@ -55,17 +55,23 @@ public class TaskController {
     public ResponseEntity<TaskResponse> create(
         @Valid 
         @RequestPart ("Task") CreateTaskRequest request, 
-        @RequestPart("Image") MultipartFile image) throws IOException {
+        @RequestPart(value = "Image", required = false) MultipartFile image) throws IOException {
+
 
             Task task = Task.builder()
                         .title(request.getTitle())
                         .description(request.getDescription())
                     .build();
 
-            Task saved = uploadImageTaskUse.SetImage(
+            Task saved = task;
+
+            if (image != null && image.isEmpty()) {
+                saved = uploadImageTaskUse.SetImage(
                 task,
                 image.getOriginalFilename(),
                 image.getBytes());
+            }
+
             
             saved = createTaskUseCase.create(saved);
 
